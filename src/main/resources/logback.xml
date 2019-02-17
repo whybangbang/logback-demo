@@ -1,0 +1,70 @@
+<configuration>
+
+    <!-- every logger is attached to a logger context. By default, the logger context is called "default" -->
+    <!-- Setting the context name is a simple and straightforward method in order to distinguish between multiple applications logging to the same target. pattern use: %contextName-->
+    <contextName>logback-demo</contextName>
+
+
+
+    <!-- three method set property -->
+    <!--<property scope="context" name="USER_HOME" value="/home/sebastien" />-->
+    <!--<property file="src/main/java/chapters/configuration/variables1.properties" />-->
+    <!--<property resource="resource1.properties" />-->
+
+    <!-- File inclusion The target file MUST have its elements nested inside an <included> element-->
+    <!--<include file="src/main/java/chapters/configuration/includedConfig.xml"/>-->
+
+    <!--By default, the configuration file will be scanned for changes once every minute.-->
+    <!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <!--<encoder>-->
+            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %contextName - %msg%n</pattern>-->
+        <!--</encoder>-->
+
+        <encoder>
+            <Pattern>%X{first} %X{last} - %m%n</Pattern>
+        </encoder>
+        <!--<layout>-->
+            <!--<Pattern>%X{first} %X{last} - %m%n</Pattern>-->
+        <!--</layout>-->
+
+    </appender>
+
+    <appender name="jmqAppender" class="com.jd.wujie.appender.JmqAppender">
+
+    </appender>
+
+
+    <!-- which takes two mandatory attributes name and class -->
+    <!-- The <appender> element may contain zero or one <layout> elements, zero or more <encoder> elements and zero or more <filter> elements -->
+    <!-- The <layout> element takes a mandatory class attribute specifying the fully qualified name of the layout class to instantiate. As with the <appender> element, <layout> may contain other elements corresponding to properties of the layout instance. Since it's such a common case, if the layout class is PatternLayout -->
+    <!-- The <encoder> element takes a mandatory class attribute specifying the fully qualified name of the encoder class to instantiate. Since it's such a common case, if the encoder class is PatternLayoutEncoder, -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/Users/why/myApp.log</file>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- <configuration> element, containing zero or more <appender> elements, followed by zero or more <logger> elements, followed by at most one <root> element.  -->
+    <!-- level=null then inherited from higher up in the hierarchy-->
+    <logger name="com.jd.log" level="debug" additivity="false">
+        <!-- accumulate VS cumulate -->
+        <!--<appender-ref ref="STDOUT" />-->
+        <appender-ref ref="FILE" />
+        <appender-ref ref="jmqAppender" />
+
+    </logger>
+
+    <!-- params are same as logger, but name is ROOT default, so onlu level-->
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- in the absence of the class attribute, assume
+   ch.qos.logback.core.hook.DefaultShutdownHook 这个怎么玩-->
+    <!--<shutdownHook/>-->
+</configuration>
